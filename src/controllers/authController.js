@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import User from "../model/user.js";
+import { generateToken } from "../utils/generateToken.js";
 
 export const authController = {
   signUp: async (req, res) => {
@@ -39,13 +39,8 @@ export const authController = {
             if(!isMatch){
                 return res.status(400).json({ msg: "Invalid credentials" });
             }
-            const payload = {
-                user: {
-                    id: user.id,
-                    email: user.email
-                }
-            }
-            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+            const token = generateToken(user);
+            
             res.status(200).json({ token} );
         }
         catch(err){
