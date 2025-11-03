@@ -16,10 +16,14 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ googleId: profile.id });
+        let user = await User.findOne({
+             oauthProvider: 'google', 
+             oauthId: profile.id
+            });
         if (!user) {
           user = await User.create({
-            googleId: profile.id,
+            oauthProvider: "google",
+            oauthId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
           });
